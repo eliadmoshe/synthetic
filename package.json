@@ -1,0 +1,51 @@
+{
+  "name": "synthetic-programming-language",
+  "version": "1.0.0",
+  "description": "Open Source Programming Language for Genetic Engineering",
+  "files": ["dist"],
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "cross-fetch": "^3.1.4",
+    "fs": "0.0.1-security",
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "xml-js": "^1.6.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.5",
+    "@babel/plugin-syntax-top-level-await": "^7.14.5",
+    "@babel/preset-env": "^7.16.5",
+    "@webpack-cli/generators": "^2.4.1",
+    "babel-loader": "^8.2.3",
+    "html-webpack-plugin": "^5.5.0",
+    "prettier": "^2.5.1",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-node-externals": "^3.0.0",
+    "workbox-webpack-plugin": "^6.4.2"
+  },
+  "scripts": {
+    "test": "test",
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliadmoshe/synthetic.git"
+  },
+  "keywords": [
+    "Genetic Engineering",
+    "DNA",
+    "Synthetic Biology"
+  ],
+  "author": "Eliad Moshe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliadmoshe/synthetic/issues"
+  },
+  "homepage": "https://github.com/eliadmoshe/synthetic#readme"
+}
