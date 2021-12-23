@@ -1,9 +1,18 @@
-import fetch from 'cross-fetch';
-import convert from 'xml-js';
+/**
+ * Copyright (c) Eliad Moshe.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
+const fetch = require ('cross-fetch');
+const convert = require ('xml-js');
 
 var cache = [];
 
-export async function igem(id)
+exports.igem = async (id) =>
 {
   var text = null;
 
@@ -47,7 +56,7 @@ export async function igem(id)
 // See BioBrick and Plasmid naming rules
 // https://parts.igem.org/Help:BioBrick_Part_Names
 // https://parts.igem.org/Help:Plasmid_backbones/Nomenclature
-export function isIgemPart(str)
+exports.isIgemPart = (str) =>
 {
   let bioBrickRegexp = /^BBa_[0-9a-zA-Z_]+$/igm;
   let plasmidRegexp = /^pSB[0-9a-zA-Z_]+$/igm;

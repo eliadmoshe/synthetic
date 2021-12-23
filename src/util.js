@@ -1,4 +1,13 @@
-export function isSequence(str)
+/**
+ * Copyright (c) Eliad Moshe.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
+exports.isSequence = (str) =>
 {
   let dnaAaRegexp = /^[AC-IK-NP-WYacgt]+$/gm;
 
@@ -7,7 +16,7 @@ export function isSequence(str)
   return found;
 }
 
-export function optimizeSequence(str)
+exports.optimizeSequence = (str) =>
 {
     let sequence = '';
 
@@ -36,7 +45,7 @@ export function optimizeSequence(str)
     return sequence;
 }
 
-globalThis.isSequence = isSequence;
-globalThis.optimizeSequence = optimizeSequence;
+// globalThis.isSequence = isSequence;
+// globalThis.optimizeSequence = optimizeSequence;
 
 

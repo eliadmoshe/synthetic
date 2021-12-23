@@ -1,9 +1,18 @@
-import fetch from 'cross-fetch';
+/**
+ * Copyright (c) Eliad Moshe.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
+
+const fetch = require ('cross-fetch');
 
 var cache = [];
 
 
-export async function getCodonUsageTable(id)
+exports.getCodonUsageTable = async (id) =>
 {
   var text = null;
 
@@ -97,7 +106,7 @@ export async function getCodonUsageTable(id)
   return table;
 }
 
-export async function searchCodonUsageTable(query)
+exports.searchCodonUsageTable = async (query) =>
 {
   // replace white spcae with '+'
   query = query.replace(/\s+/g, '+');

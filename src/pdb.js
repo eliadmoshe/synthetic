@@ -1,9 +1,18 @@
-import fetch from 'cross-fetch';
-import convert from 'xml-js';
+/**
+ * Copyright (c) Eliad Moshe.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ */
 
+ const fetch = require ('cross-fetch');
+ const convert = require ('xml-js');
+ 
 var cache = [];
 
-export async function pdb(id)
+exports.pdb = async (id) =>
 {
   var text = null;
 
@@ -72,7 +81,7 @@ export async function pdb(id)
 // https://parts.igem.org/Help:Plasmid_backbones/Nomenclature
 // Can use both capital and non-capital letters
 
-export function isPdbPart(str)
+exports.isPdbPart = (str) =>
 {
   let pdbIdkRegexp = /^[0-9A-Z]{4}$/igm;
 
