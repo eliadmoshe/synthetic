@@ -9,13 +9,10 @@
 
 require( '../index.js');
 
-// let compile = async (str) =>
-// {
-//   let variants = await run(str);
-//   console.log(variants);  
-// }; 
+compile(
 
-run(promoter('aaa') + rbs(['gcg', 'aaa']));
+    promoter(['BBa_C0040', '7BKX']) +  rbs(['gcg', 'aaa']) + cds('aaa') + terminator('tgcatggc')
+    
+    )
 
-// compile(str);
 

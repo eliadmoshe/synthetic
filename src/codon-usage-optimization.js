@@ -23,7 +23,13 @@ exports.getCodonUsageTable = async (id) =>
 
   try
   {
-    const response = await fetch(`http://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=${id}&aa=1&style=N`, { method: "GET", headers: { 'Content-Type': 'text/xml' }});
+    const response = await fetch( `http://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=${id}&aa=1&style=N`
+                                  // , 
+                                  // { 
+                                  //   method: "GET"
+                                  //   , headers: { 'Content-Type': 'multipart/form-data' }
+                                  // }
+                                );
     text = await response.text();
   }
   catch (error)

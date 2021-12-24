@@ -12,6 +12,8 @@ const convert = require ('xml-js');
 
 var cache = [];
 
+// https://javascript.info/fetch-crossorigin
+
 exports.igem = async (id) =>
 {
   var text = null;
@@ -23,7 +25,13 @@ exports.igem = async (id) =>
 
   try
   {
-    const response = await fetch(`http://parts.igem.org/xml/part.${id}`, { method: "GET", headers: { 'Content-Type': 'text/xml' }});
+    const response = await fetch( `https://parts.igem.org/cgi/xml/part.cgi?part=${id}`
+                                  // , 
+                                  // { 
+                                  //   method: "GET"
+                                  //   , headers: { 'Content-Type': 'multipart/form-data' }
+                                  // }
+                                );
     text = await response.text();
   }
   catch (error)

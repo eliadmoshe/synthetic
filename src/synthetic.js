@@ -8,7 +8,7 @@
  */
 
  const igem = require('./igem.js');
- const pdb = require('./igem.js');
+ const pdb = require('./pdb.js');
  const io = require('./io.js');
  const util = require('./util.js');
  const codonUsageOptimization = require('./codon-usage-optimization.js');
@@ -23,8 +23,7 @@
 // import './util.js';
 
 
-// globalThis.currentCodonUsageTable = await codonUsageOptimization.getCodonUsageTable('155864'); // Escherichia coli O157:H7 EDL933
-
+globalThis.currentCodonUsageTable = null; 
 // codonUsageOptimization.searchCodonUsageTable('Escherichia');
 
 
@@ -104,8 +103,17 @@ function getVariants(root)
   return combineAll(groups);
 }
 
-let run = async (str) =>
+let compile = async (str) =>
 {
+  ////////////////////////////////
+
+  if(!globalThis.currentCodonUsageTable)
+  {
+    globalThis.currentCodonUsageTable = await codonUsageOptimization.getCodonUsageTable('155864'); // Escherichia coli O157:H7 EDL933
+  }
+
+
+  ///////////////////////////////
   str = ' ' + str;  
 
   // Allow to add combinatorial strings without 'part()'
@@ -176,12 +184,12 @@ let run = async (str) =>
 
 
   // Store compiled variants in file
-  // io.writeVariants('result.fasta', 'Compiled Sequence', combinedVariants);
+  io.writeVariants('result.fasta', 'Compiled Sequence', combinedVariants);
 
 
 
 
-  console.log(combinedVariants);
+  // console.log(combinedVariants);
 
   // Return result
   return combinedVariants;
@@ -209,7 +217,7 @@ globalThis.receiver = receiver;
 globalThis.sender = sender;
 globalThis.measurement = measurement;
 globalThis.primerBindingSite = primerBindingSite;
-globalThis.run = run;
+globalThis.compile = compile;
 
 exports.promoter = promoter;
 exports .rbs = rbs;
@@ -227,4 +235,4 @@ exports.receiver = receiver;
 exports.sender = sender;
 exports.measurement = measurement;
 exports.primerBindingSite = primerBindingSite;
-exports.run = run;
+exports.compile = compile;
