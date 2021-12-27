@@ -1,7 +1,7 @@
 {
   "name": "synthetic",
-  "version": "1.0.45",
-  "description": "Open Source Programming Language for Genetic Engineering",
+  "version": "1.0.47",
+  "description": "An Open Source Programming Language for Genetic Engineering",
   "main": "synthetic.js",
   "dependencies": {
     "chalk": "^4.1.2",

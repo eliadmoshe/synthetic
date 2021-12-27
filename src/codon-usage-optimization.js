@@ -12,7 +12,7 @@ const fetch = require ('cross-fetch');
 var cache = [];
 
 
-exports.getCodonUsageTable = async (id) =>
+let getCodonUsageTable = async (id) =>
 {
   var text = null;
 
@@ -112,7 +112,7 @@ exports.getCodonUsageTable = async (id) =>
   return table;
 }
 
-exports.searchCodonUsageTable = async (query) =>
+let searchCodonUsageTable = async (query) =>
 {
   // replace white spcae with '+'
   query = query.replace(/\s+/g, '+');
@@ -147,3 +147,16 @@ exports.searchCodonUsageTable = async (query) =>
 
     // let dnaSequence = '';
 }
+
+let setCodonUsageTable = async (id) =>
+{
+  globalThis.currentCodonUsageTable = await getCodonUsageTable(id);
+}
+
+exports.getCodonUsageTable = getCodonUsageTable;
+exports.setCodonUsageTable = setCodonUsageTable;
+exports.searchCodonUsageTable = searchCodonUsageTable;
+
+globalThis.getCodonUsageTable = getCodonUsageTable;
+globalThis.setCodonUsageTable = setCodonUsageTable;
+globalThis.searchCodonUsageTable = searchCodonUsageTable;

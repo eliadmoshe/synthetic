@@ -124,6 +124,7 @@ exports.writeVariants = (filePath, header, variants) =>
     let content = fastaSequences.join('\r\n\r\n');
     let contentForCommandline = '\r\n\r\n' + fastaSequencesForCommandline.join('\r\n\r\n\r\n') + '\r\n\r\n';
 
+    console.clear(); 
     console.log(contentForCommandline);
 
     try 

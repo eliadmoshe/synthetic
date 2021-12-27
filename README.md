@@ -7,3 +7,6 @@ An Open Source Programming Language For Genetic Engineering
 - Supports Codon Usage Optimization.
 - Direct Integration to iGEM and Protein Data Bank.
 - Supports Combinatorial Design.
+
+
+Special thanks to Iulian-Flavius Meghea who provided this npm package name

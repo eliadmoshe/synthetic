@@ -220,9 +220,9 @@ globalThis.primerBindingSite = primerBindingSite;
 globalThis.compile = compile;
 
 exports.promoter = promoter;
-exports .rbs = rbs;
-exports .cds = cds;
-exports .terminator = terminator;
+exports.rbs = rbs;
+exports.cds = cds;
+exports.terminator = terminator;
 exports.proteinDomain = proteinDomain;
 exports.translationalUnit = translationalUnit;
 exports.dna = dna;
