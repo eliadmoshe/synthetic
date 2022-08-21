@@ -142,17 +142,12 @@ exports.writeVariants = (filePath, header, variants) =>
 
 
 
-// export function readGenBank(fileName)
-// {
+exports.readGenBank = (fileName) =>
+{
 
-// }
+}
 
-// export function writeGenBank(fileName, sequence)
-// {
+exports.writeGenBank = (fileName, sequence) =>
+{
 
-// }
-
-// globalThis.readFasta = readFasta;
-// globalThis.writeFasta = writeFasta;
-// globalThis.readGenBank = readGenBank;
-// globalThis.writeGenBank = writeGenBank;
+}

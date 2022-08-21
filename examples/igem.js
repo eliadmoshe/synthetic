@@ -11,7 +11,10 @@
 
  compile(
  
-     promoter(['BBa_C0040', '7BKX']) +  rbs(['gcg', 'aaa']) + cds('aaa') + terminator('tgcatggc')
+     promoter(['BBa_C0040', '7BKX']) 
+     +  rbs(['gcg', 'aaa']) 
+     + cds('aaa') 
+     + terminator('tgcatggc')
      
      )
  

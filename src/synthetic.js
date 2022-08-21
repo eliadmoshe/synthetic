@@ -14,15 +14,6 @@
  const codonUsageOptimization = require('./codon-usage-optimization.js');
 
 
-
-// import {igem, isIgemPart} from './igem.js';
-// import {pdb, isPdbPart} from './pdb.js';
-// import {writeVariants} from './io.js';
-// import { getCodonUsageTable, searchCodonUsageTable } from './codon-usage-optimization.js';
-// import './io.js';
-// import './util.js';
-
-
 globalThis.currentCodonUsageTable = null; 
 // codonUsageOptimization.searchCodonUsageTable('Escherichia');
 
@@ -202,9 +193,9 @@ let compile = async (str) =>
 // https://developer.mozilla.org/en-US/docs/Glossary/Global_object
 
 globalThis.promoter = promoter;
-globalThis .rbs = rbs;
-globalThis .cds = cds;
-globalThis .terminator = terminator;
+globalThis.rbs = rbs;
+globalThis.cds = cds;
+globalThis.terminator = terminator;
 globalThis.proteinDomain = proteinDomain;
 globalThis.translationalUnit = translationalUnit;
 globalThis.dna = dna;
@@ -218,21 +209,3 @@ globalThis.sender = sender;
 globalThis.measurement = measurement;
 globalThis.primerBindingSite = primerBindingSite;
 globalThis.compile = compile;
-
-exports.promoter = promoter;
-exports.rbs = rbs;
-exports.cds = cds;
-exports.terminator = terminator;
-exports.proteinDomain = proteinDomain;
-exports.translationalUnit = translationalUnit;
-exports.dna = dna;
-exports.composite = composite;
-exports.proteinGenerator = proteinGenerator;
-exports.restrictionSite = restrictionSite;
-exports.reporter = reporter;
-exports.inverter = inverter;
-exports.receiver = receiver;
-exports.sender = sender;
-exports.measurement = measurement;
-exports.primerBindingSite = primerBindingSite;
-exports.compile = compile;
