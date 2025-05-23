@@ -34,22 +34,27 @@ function part(type, ptr)
   return JSON.stringify(obj) + ', ';
 }
 
-let promoter = (obj) => { return part('promoter', obj); }
-let rbs = (obj) => { return part('rbs', obj); }
-let cds = (obj) => { return part('cds', obj); }
-let terminator = (obj) => { return part('terminator', obj); }
-let proteinDomain = (obj) => { return part('proteinDomain', obj); }
-let translationalUnit = (obj) => { return part('translationalUnit', obj); }
-let dna = (obj) => { return part('dna', obj); }
-let composite = (obj) => { return part('composite', obj); }
-let proteinGenerator = (obj) => { return part('proteinGenerator', obj); }
-let restrictionSite = (obj) => { return part('restrictionSite', obj); }
-let reporter = (obj) => { return part('reporter', obj); }
-let inverter = (obj) => { return part('inverter', obj); }
-let receiver = (obj) => { return part('receiver', obj); }
-let sender = (obj) => { return part('sender', obj); }
-let measurement = (obj) => { return part('measurement', obj); }
-let primerBindingSite = (obj) => { return part('primerBindingSite', obj); }
+globalThis.promoter = (obj) => { return part('promoter', obj); };
+globalThis.rbs = (obj) => { return part('rbs', obj); }
+globalThis.cds = (obj) => { return part('cds', obj); }
+globalThis.terminator = (obj) => { return part('terminator', obj); }
+globalThis.proteinDomain = (obj) => { return part('proteinDomain', obj); }
+globalThis.translationalUnit = (obj) => { return part('translationalUnit', obj); }
+globalThis.dna = (obj) => { return part('dna', obj); }
+globalThis.composite = (obj) => { return part('composite', obj); }
+globalThis.proteinGenerator = (obj) => { return part('proteinGenerator', obj); }
+globalThis.restrictionSite = (obj) => { return part('restrictionSite', obj); }
+globalThis.reporter = (obj) => { return part('reporter', obj); }
+globalThis.inverter = (obj) => { return part('inverter', obj); }
+globalThis.receiver = (obj) => { return part('receiver', obj); }
+globalThis.sender = (obj) => { return part('sender', obj); }
+globalThis.measurement = (obj) => { return part('measurement', obj); }
+globalThis.primerBindingSite = (obj) => { return part('primerBindingSite', obj); }
+
+
+
+
+
 
 function combineAll(arrayOfArrays)
 {
@@ -82,6 +87,11 @@ function combineAll(arrayOfArrays)
    return result;
 }
 
+
+
+
+
+
 function getVariants(root)
 {
   let groups = [];
@@ -94,7 +104,12 @@ function getVariants(root)
   return combineAll(groups);
 }
 
-let compile = async (str) =>
+
+
+
+
+
+globalThis.compile = async (str) =>
 {
   ////////////////////////////////
 
@@ -185,27 +200,3 @@ let compile = async (str) =>
   // Return result
   return combinedVariants;
 }
-
-
-
-
-
-// https://developer.mozilla.org/en-US/docs/Glossary/Global_object
-
-globalThis.promoter = promoter;
-globalThis.rbs = rbs;
-globalThis.cds = cds;
-globalThis.terminator = terminator;
-globalThis.proteinDomain = proteinDomain;
-globalThis.translationalUnit = translationalUnit;
-globalThis.dna = dna;
-globalThis.composite = composite;
-globalThis.proteinGenerator = proteinGenerator;
-globalThis.restrictionSite = restrictionSite;
-globalThis.reporter = reporter;
-globalThis.inverter = inverter;
-globalThis.receiver = receiver;
-globalThis.sender = sender;
-globalThis.measurement = measurement;
-globalThis.primerBindingSite = primerBindingSite;
-globalThis.compile = compile;

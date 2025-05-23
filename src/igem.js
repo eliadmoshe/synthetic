@@ -25,13 +25,17 @@ exports.igem = async (id) =>
 
   try
   {
-    const response = await fetch( `https://parts.igem.org/cgi/xml/part.cgi?part=${id}`
-                                  // , 
-                                  // { 
-                                  //   method: "GET"
-                                  //   , headers: { 'Content-Type': 'multipart/form-data' }
-                                  // }
-                                );
+    const response = await fetch( `https://parts.igem.org/cgi/xml/part.cgi?part=${id}`,
+                                    {
+                                      // A browser like "User-Agent" is required to fetch data from igem's server
+                                      headers: {
+                                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+                                            "Accept": "application/xml",
+                                            "Referer": "https://parts.igem.org",
+                                            "Accept-Language": "en-US,en;q=0.9",          
+                                      },
+                                    }
+                                  );
     text = await response.text();
   }
   catch (error)
