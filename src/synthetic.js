@@ -9,9 +9,9 @@
 
  const igem = require('./igem.js');
  const pdb = require('./pdb.js');
- const io = require('./io.js');
  const util = require('./util.js');
  const codonUsageOptimization = require('./codon-usage-optimization.js');
+//  const io = require('./io.js');
 
 
 globalThis.currentCodonUsageTable = null; 
@@ -190,7 +190,7 @@ globalThis.compile = async (str) =>
 
 
   // Store compiled variants in file
-  io.writeVariants('result.fasta', 'Compiled Sequence', combinedVariants);
+  // io.writeVariants('result.fasta', 'Compiled Sequence', combinedVariants);
 
 
 
