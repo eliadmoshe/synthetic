@@ -7,57 +7,19 @@
  * @flow
  */
 
- const fetch = require ('cross-fetch');
- const convert = require ('xml-js');
+  const util = require('./util.js');  
  
 var cache = [];
 
 exports.pdb = async (id) =>
 {
-  var text = null;
-
   if(cache[id])
   {
     return cache[id].sequence;
   }
 
-  try
-  {
 
-/*
-application/x-www-form-urlencoded
-multipart/form-data
-text/plain
-
-*/
-    const response = await fetch( `https://www.rcsb.org/fasta/entry/${id}/display`
-                                  // , { 
-                                  //     method: "GET"
-                                  //     , headers: { 'Content-Type': 'multipart/form-data' }
-
-                                  //     // , mode: "no-cors" // no-cors, cors, *same-origin
-                                  //     // , cache: "no-cache" // *default, no-cache, reload, force-cache, only-if-cached
-                                  //     // , credentials: "same-origin" // include, same-origin, *omit
-                                  //     //{
-                                  //     //    "Content-Type": "application/json; charset=utf-8",
-                                  //         // "Content-Type": "application/x-www-form-urlencoded",
-                                  //     //},
-                                  //     // , redirect: "follow" // manual, *follow, error
-                                  //     // , referrer: "no-referrer" // no-referrer, *client
-                              
-                                  //     }
-                                );
-    // let blob = await response.blob(); // download as Blob object
-
-    // text = await blob.text();
-    text = await response.text();
-
-  }
-  catch (error)
-  {
-    console.log(error);
-  }
-
+  let text = await util.get( `https://www.rcsb.org/fasta/entry/${id}/display`);
 
 
   if(text)

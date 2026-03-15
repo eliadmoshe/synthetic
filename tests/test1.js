@@ -9,9 +9,37 @@
 
 require( '../index.js');
 
+searchCodonUsageTable('Escherichia').then( 
+    (tables) =>
+    {
+        console.log('Tables: ', tables);
+        getCodonUsageTable(tables[0].id).then
+        (
+            (table) =>
+            {
+                console.log('Table: ', table);
+                setCodonUsageTable(table);
+            }
+        );
+    }
+);
+
+
+
+function onDrawPlasmid(plasmidId, featurs, variant)
+{
+    // console.log('plasmidId', plasmidId);
+    // console.log('plasmidId', featurs);
+    // console.log('variant', variant);
+}
+
 compile(
 
     promoter(['BBa_C0040', '7BKX']) +  rbs(['gcg', 'aaa']) + cds('aaa') + terminator('tgcatggc')
+
+
+
+    , onDrawPlasmid
     
     )
 

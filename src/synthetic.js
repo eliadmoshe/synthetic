@@ -11,7 +11,6 @@
  const pdb = require('./pdb.js');
  const util = require('./util.js');
  const codonUsageOptimization = require('./codon-usage-optimization.js');
-//  const io = require('./io.js');
 
 
 globalThis.currentCodonUsageTable = null; 
@@ -109,7 +108,7 @@ function getVariants(root)
 
 
 
-globalThis.compile = async (str) =>
+globalThis.compile = async (str, onDrawPlasmid) =>
 {
   ////////////////////////////////
 
@@ -151,7 +150,7 @@ globalThis.compile = async (str) =>
     { 
       if(util.isSequence(variant[j]))
       {
-        variant[j] = util.optimizeSequence(variant[j]);  
+        variant[j] = optimizeSequence(variant[j]);  
       }
       else if(igem.isIgemPart(variant[j]))
       {
@@ -160,14 +159,28 @@ globalThis.compile = async (str) =>
       else if(pdb.isPdbPart(variant[j]))
       {
         let aaSequence = await pdb.pdb(variant[j]); 
-        variant[j] = util.optimizeSequence(aaSequence);
+        variant[j] = optimizeSequence(aaSequence);
       }
+    }
+
+    if(onDrawPlasmid)
+    {
+      let plasmidId = i;
+
+      let featurs = [];
+
+      for(let i = 0; i < root.group.length; i++)
+      {
+        featurs.push(root.group[i].type);
+      }
+
+      onDrawPlasmid(plasmidId, featurs, variant);
     }
   }
   //*/
 
 
-
+  console.log('Variants:', variants);
 
 
   // Generate combined, single string variants
@@ -188,14 +201,21 @@ globalThis.compile = async (str) =>
 
 
 
+const isBrowser = typeof window !== 'undefined' &&
+                  typeof window.document !== 'undefined';
 
-  // Store compiled variants in file
-  // io.writeVariants('result.fasta', 'Compiled Sequence', combinedVariants);
+  // if(!isBrowser)
+  // {
+  //    const io = require('./io.js');
+  //   // Store compiled variants in file
+  //   io.writeVariants('result.fasta', 'Compiled Sequence', combinedVariants);
+
+  // }
 
 
 
 
-  // console.log(combinedVariants);
+  console.log(combinedVariants);
 
   // Return result
   return combinedVariants;

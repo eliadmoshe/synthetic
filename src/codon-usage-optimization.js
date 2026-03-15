@@ -7,29 +7,51 @@
  * @flow
  */
 
-const fetch = require ('cross-fetch');
+const util = require('./util.js');
 
-var cache = [];
+/** Maps Kazusa GenBank division codes to human-readable labels. */
+const GB_DIVISIONS = {
+  gbbct: 'Bacteria',
+  gbphg: 'Phage',
+  gbvrl: 'Viral',
+  gbpln: 'Plant',
+  gbpri: 'Primate',
+  gbmam: 'Mammal',
+  gbrod: 'Rodent',
+  gbvrt: 'Vertebrate',
+  gbinv: 'Invertebrate',
+  gbuna: 'Unannotated',
+};
 
-
-let getCodonUsageTable = async (id) =>
+/**
+ * Searches the Kazusa Codon Usage Database for organisms matching a query.
+ *
+ * @param {string} query - Organism name or partial name (e.g. "Escherichia").
+ * @returns {Promise<Array<{
+ *   id: string,
+ *   name: string,
+ *   type: string,
+ *   division: string,
+ *   geneCount: number
+ * }>|null>} Array of matching organisms, or null if the request failed.
+ *   - `id`        — Kazusa organism ID (pass to getCodonUsageTable)
+ *   - `name`      — Full organism name
+ *   - `type`      — GenBank division code (e.g. "gbbct")
+ *   - `division`  — Human-readable division label (e.g. "Bacteria")
+ *   - `geneCount` — Number of genes in the database for this organism
+ */
+let searchCodonUsageTable = async (query) =>
 {
-  var text = null;
+  // replace white spcae with '+'
+  query = query.replace(/\s+/g, '+');
 
-  if(cache[id])
-  {
-    return cache[id];
-  }
+  console.log(query);
+
+  var text = null;
 
   try
   {
-    const response = await fetch( `http://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=${id}&aa=1&style=N`
-                                  // , 
-                                  // { 
-                                  //   method: "GET"
-                                  //   , headers: { 'Content-Type': 'multipart/form-data' }
-                                  // }
-                                );
+    const response = await fetch(`http://www.kazusa.or.jp/codon/cgi-bin/spsearch.cgi?species=${query}&c=i`, { method: "GET", headers: { 'Content-Type': 'text/xml' }});
     text = await response.text();
   }
   catch (error)
@@ -37,24 +59,73 @@ let getCodonUsageTable = async (id) =>
     console.log(error);
   }
 
+  if(!text) return null;
+
+  const result = [];
+  const regex = /href="\/codon\/cgi-bin\/showcodon\.cgi\?species=([^"]+)">\s*<I>([^<]+)<\/I>\s*\[(\w+)\]:\s*(\d+)/gi;
+  let match;
+
+  while ((match = regex.exec(text)) !== null)
+  {
+    result.push({
+      id: match[1].trim(),
+      name: match[2].trim(),
+      type: match[3].trim(),
+      division: GB_DIVISIONS[match[3].trim()] || match[3].trim(),
+      geneCount: parseInt(match[4], 10),
+    });
+  }
+
+  result.sort((a, b) => b.geneCount - a.geneCount);
+
+  return result;
+}
+
+
+
+
+/** In-memory cache of fetched codon usage tables, keyed by organism ID. */
+var cache = [];
+
+
+/**
+ * Fetches and parses the codon usage table for a given organism from the
+ * Kazusa Codon Usage Database. Results are cached so repeated calls for the
+ * same ID are instant.
+ *
+ * @param {string} id - Kazusa organism ID (e.g. "37762" for E. coli).
+ * @returns {Promise<{
+ *   dnaTripletFrequencies: Array<{triplet: string, aa: string, fraction: number, frequencyPerThousand: number, number: number}>,
+ *   aminoAcidFrequencies: Array,
+ *   rawString: string
+ * }|null>} Parsed codon usage table, or null if not found / parsing failed.
+ *   - `dnaTripletFrequencies`   — All 64 codon entries
+ *   - `aminoAcidFrequencies` — Most-frequent codon per amino acid, keyed by single-letter AA code
+ *   - `rawString`     — Raw text from the Kazusa database
+ */
+let getCodonUsageTable = async (id) =>
+{
+  if(cache[id])
+  {
+    return cache[id];
+  }
+
+  let text = await util.get( `http://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=${id}&aa=1&style=N`);
 
   var table = 
   {
-    frequencies: []
-    , aAfrequencies: []
+    dnaTripletFrequencies: []
+    , aminoAcidFrequencies: []
     , rawString: ''
   };
 
   if(text)
   {
-    // console.log(text);
-
     let regexp = /<PRE>([^@]*)<\/PRE>/igm;
     var match = regexp.exec(text);
 
     if(!match)
     {
-      // Handle Error
       return null;
     }
 
@@ -69,17 +140,17 @@ let getCodonUsageTable = async (id) =>
     {
       let frequency = {
         triplet: result[1].toLowerCase().replace(/u/g, 't')
-        , aa: result[2]
+        , aminoAcid: result[2]
         , fraction: parseFloat(result[3])
         , frequencyPerThousand: parseFloat(result[4])
         , number: parseInt(result[5])  
       }
 
-      table.frequencies.push(frequency);
+      table.dnaTripletFrequencies.push(frequency);
     }
 
     // Make sure there are 64 frequencies
-    if(table.frequencies.length != 64)
+    if(table.dnaTripletFrequencies.length != 64)
     {
       return null;
     }
@@ -92,19 +163,17 @@ let getCodonUsageTable = async (id) =>
 
 
   // Create a lookup table array that contains the most frequent codons
-
-  for(let i = 0; i < table.frequencies.length; i++)
+  for(let i = 0; i < table.dnaTripletFrequencies.length; i++)
   {
-    let f = table.frequencies[i];
+    let f = table.dnaTripletFrequencies[i];
 
-    if(!table.aAfrequencies[f.aa] || table.aAfrequencies[f.aa].fraction < f.fraction)
+    if(!table.aminoAcidFrequencies[f.aminoAcid] || table.aminoAcidFrequencies[f.aminoAcid].fraction < f.fraction)
     {
-      table.aAfrequencies[f.aa] = f;
+      table.aminoAcidFrequencies[f.aminoAcid] = f;
     }
   }
 
-  // console.log(table.frequencies);
-  // console.log(table.aAfrequencies);
+
 
   // Store table in cache for faster access
   cache[id] = table; 
@@ -112,51 +181,60 @@ let getCodonUsageTable = async (id) =>
   return table;
 }
 
-let searchCodonUsageTable = async (query) =>
-{
-  // replace white spcae with '+'
-  query = query.replace(/\s+/g, '+');
-
-  console.log(query);
-
-  var text = null;
-
-  // if(cache[id])
-  // {
-  //   return cache[id];
-  // }
-
-  try
-  {
-    const response = await fetch(`http://www.kazusa.or.jp/codon/cgi-bin/spsearch.cgi?species=${query}&c=i`, { method: "GET", headers: { 'Content-Type': 'text/xml' }});
-    text = await response.text();
-  }
-  catch (error)
-  {
-    console.log(error);
-  }
-
-  if(!text) return null;
-  
-  console.log(text);
 
 
-    // let table = getCodonUsageTable(organism);
 
-    // if(!table) return;
 
-    // let dnaSequence = '';
-}
+
+/**
+ * Fetches the codon usage table for the given organism ID and sets it as the
+ * globally active table (`globalThis.currentCodonUsageTable`).
+ *
+ * @param {string} id - Kazusa organism ID.
+ * @returns {Promise<void>}
+ */
 
 let setCodonUsageTable = async (id) =>
 {
   globalThis.currentCodonUsageTable = await getCodonUsageTable(id);
 }
 
-exports.getCodonUsageTable = getCodonUsageTable;
-exports.setCodonUsageTable = setCodonUsageTable;
-exports.searchCodonUsageTable = searchCodonUsageTable;
 
-globalThis.getCodonUsageTable = getCodonUsageTable;
-globalThis.setCodonUsageTable = setCodonUsageTable;
-globalThis.searchCodonUsageTable = searchCodonUsageTable;
+let optimizeSequence = (str) =>
+{
+    let sequence = '';
+
+    for(let i = 0; i < str.length; i++)
+    {
+      let c = str[i];
+
+      if(c == c.toUpperCase())
+      {
+        try
+        {
+            sequence += currentCodonUsageTable.aminoAcidFrequencies[c].triplet;
+        }
+        catch(err)
+        {
+          console.log('error');
+          console.log(c);
+        }
+      }
+      else
+      {
+        sequence += c;
+      }
+    }
+
+    return sequence;
+}
+
+
+/**
+ * Public API
+ */
+
+exports.searchCodonUsageTable = globalThis.searchCodonUsageTable = searchCodonUsageTable;
+exports.getCodonUsageTable    = globalThis.getCodonUsageTable    = getCodonUsageTable;
+exports.setCodonUsageTable    = globalThis.setCodonUsageTable    = setCodonUsageTable;
+exports.optimizeSequence      = globalThis.optimizeSequence      = optimizeSequence;

@@ -1,14 +1,13 @@
 {
   "name": "synthetic",
-  "version": "1.1.2",
+  "version": "1.1.8",
   "description": "An Open Source Programming Language for Genetic Engineering",
   "main": "synthetic.js",
   "dependencies": {
     "chalk": "^4.1.2",
     "cross-fetch": "^3.1.4",
-    "xml-js": "^1.6.11"
+    "fast-xml-parser": "^5.2.3"
   },
-  "devDependencies": {},
   "scripts": {},
   "repository": {
     "type": "git",

@@ -7,42 +7,18 @@
  * @flow
  */
 
-const fetch = require ('cross-fetch');
-const convert = require ('xml-js');
+const util = require('./util.js');
 
 var cache = [];
 
-// https://javascript.info/fetch-crossorigin
-
 exports.igem = async (id) =>
 {
-  var text = null;
-
   if(cache[id])
   {
     return cache[id];
   }
 
-  try
-  {
-    const response = await fetch( `https://parts.igem.org/cgi/xml/part.cgi?part=${id}`,
-                                    {
-                                      // A browser like "User-Agent" is required to fetch data from igem's server
-                                      headers: {
-                                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
-                                            "Accept": "application/xml",
-                                            "Referer": "https://parts.igem.org",
-                                            "Accept-Language": "en-US,en;q=0.9",          
-                                      },
-                                    }
-                                  );
-    text = await response.text();
-  }
-  catch (error)
-  {
-    console.log(error);
-  }
-
+  let text = await util.get( `https://parts.igem.org/cgi/xml/part.cgi?part=${id}`);
 
   var sequence = '';
 
@@ -50,11 +26,11 @@ exports.igem = async (id) =>
   {
     // console.log(text);
 
-    var result = convert.xml2json(text, {compact: true, spaces: 4});
+    var result = util.xml2js(text);
 
-    result = JSON.parse(result);
+    // result = JSON.parse(result);
 
-    sequence = result.rsbpml.part_list.part.sequences.seq_data._text;
+    sequence = result.rsbpml.part_list.part.sequences.seq_data;
 
     sequence = sequence.replace(/\s/g,''); // remove all white space
   
